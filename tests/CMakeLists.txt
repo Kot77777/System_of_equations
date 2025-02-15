@@ -13,7 +13,8 @@ file(GLOB_RECURSE TEST_SOURCES test_*.cpp)
 
 foreach (TEST_FILE IN LISTS TEST_SOURCES)
     get_filename_component(TEST_FILE_NAME ${TEST_FILE} NAME_WE)
-    add_executable(${TEST_FILE_NAME} ${TEST_FILE})
+    add_executable(${TEST_FILE_NAME} ${TEST_FILE}
+            test_matrix_from_vector.cpp)
     target_link_libraries(${TEST_FILE_NAME} gtest gtest_main ${PROJECT_NAME})
     set_target_properties(${TEST_FILE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
     gtest_discover_tests(${TEST_FILE_NAME})

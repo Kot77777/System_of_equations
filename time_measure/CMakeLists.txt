@@ -1,0 +1,3 @@
+add_executable(compare_matrix_dot compare_matrix_dot.cpp)
+target_link_libraries(compare_matrix_dot ${PROJECT_NAME})
+set_target_properties(compare_matrix_dot PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
