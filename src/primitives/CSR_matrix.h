@@ -21,7 +21,7 @@ public:
         std::size_t count = 0;
         values_.resize(DOK.size());
         cols_.resize(DOK.size());
-        rows_.resize(M + 2);
+        rows_.resize(N + 1);
         for (const auto &element: DOK) {
             values_[count] = element.second;
             cols_[count++] = element.first[1];
