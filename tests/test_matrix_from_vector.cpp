@@ -9,3 +9,11 @@ TEST(matrix_from_vector, multiply_matrix_on_vector) {
     Vector<double> x_exp{{14, 32, 53}, 3};
     ASSERT_EQ(x_res == x_exp, 1);
 }
+
+TEST(vector_from_vector, diada_vectors) {
+    const Vector<double> b{{1, 2, 3}, 3};
+
+    Matrix<double> res = diada_for_vector(b);
+    Matrix<double> exp{{1, 2, 3, 2, 4, 6, 3, 6, 9}, 3, 3};
+    ASSERT_EQ(res == exp, 1);
+}

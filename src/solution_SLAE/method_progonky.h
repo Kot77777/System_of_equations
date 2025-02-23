@@ -1,7 +1,12 @@
-#ifndef METHOD_PROGONKY_H
-#define METHOD_PROGONKY_H
-#include "PQ.h"
+#ifndef SOLUTION_SLAE_METHOD_PROGONKY_H
+#define SOLUTION_SLAE_METHOD_PROGONKY_H
 #include <array>
+
+template<typename T>
+struct PQ{
+    T p_ = 0;
+    T q_ = 0;
+};
 
 template<typename T, std::size_t N>
 std::array<T, N> method_progonky(const std::array<T, N - 1>& a,
@@ -28,4 +33,4 @@ std::array<T, N> method_progonky(const std::array<T, N - 1>& a,
     return solution;
 }
 
-#endif //METHOD_PROGONKY_H
+#endif //SOLUTION_SLAE_METHOD_PROGONKY_H

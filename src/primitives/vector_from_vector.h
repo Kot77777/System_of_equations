@@ -1,5 +1,6 @@
 #ifndef PRIMITIVES_VECTOR_FROM_VECTOR_H
 #define PRIMITIVES_VECTOR_FROM_VECTOR_H
+#include <cmath>
 
 template<typename T>
 class Vector {
@@ -9,7 +10,7 @@ class Vector {
 public:
     Vector() = default;
 
-    Vector(const std::vector<T> &matrix, const std::size_t N) : data_(matrix), N_(N) {
+    Vector(const std::vector<T> &vector, const std::size_t N) : data_(vector), N_(N) {
     }
 
     Vector(const std::size_t N) {
@@ -32,6 +33,14 @@ public:
     }
 
     const std::size_t N() const { return N_; }
+
+    const T norm() const {
+        T res{};
+        for (auto &i: data_) {
+            res += i * i;
+        }
+        return std::sqrt(res);
+    }
 
     operator T() const {
         if (N_ != 1) {

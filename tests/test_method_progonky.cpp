@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "method_progonky/method_progonky.h"
+#include "solution_SLAE/method_progonky.h"
 
 TEST(method_progonky, equal_of_array_1) {
 

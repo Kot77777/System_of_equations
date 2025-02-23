@@ -36,16 +36,16 @@ public:
         return 0;
     }
 
-    const std::vector<std::size_t> rows() const {
-        return rows_;
+    const std::size_t rows(const std::size_t i) const {
+        return rows_[i];
     }
 
-    const std::vector<T> values() const {
-        return values_;
+    const T values(const std::size_t i) const {
+        return values_[i];
     }
 
-    const std::vector<std::size_t> cols() const {
-        return cols_;
+    const std::size_t cols(const std::size_t i) const {
+        return cols_[i];
     }
 
     const std::size_t N() const { return N_; }
@@ -56,15 +56,13 @@ public:
 template<typename T>
 Vector<T> operator*(const CSR_matrix<T> &matrix, const Vector<T> &vector) {
     Vector<T> vector_res{matrix.N()};
-    const std::vector<std::size_t> cols = matrix.cols();
-    const std::vector<T> values = matrix.values();
     const std::size_t N = matrix.N();
 
     for (std::size_t i = 0; i != N; ++i) {
-        const std::size_t k_start = matrix.rows()[i];
-        const std::size_t k_end = matrix.rows()[i+1];
+        const std::size_t k_start = matrix.rows(i);
+        const std::size_t k_end = matrix.rows(i+1);
         for (std::size_t k = k_start; k < k_end; ++k) {
-            vector_res(i) += values[k] * vector(cols[k]);
+            vector_res(i) += matrix.values(k) * vector(matrix.cols(k));
         }
     }
     return vector_res;
