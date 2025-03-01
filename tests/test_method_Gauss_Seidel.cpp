@@ -14,7 +14,7 @@ TEST(method_Gauss_Seidel, method_Gauss_Seidel) {
     Vector<double> b{{1., 2., 4.}, 3};
     const double eps = 10e-15;
 
-    const Vector<double> res = method_Gauss_Seidel(matrix_1, b, eps);
+    const Vector<double> res = method_Gauss_Seidel(matrix_1, b, 1000, eps);
     const Vector<double> exp{{3./38, 7./38, 2./3}, 3};
 
     for(std::size_t i = 0; i < 3; ++i) {

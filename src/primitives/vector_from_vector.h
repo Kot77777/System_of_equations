@@ -42,6 +42,11 @@ public:
         return std::sqrt(res);
     }
 
+    void clean() {
+        data_.clear();
+        data_.resize(N_);
+    }
+
     operator T() const {
         if (N_ != 1) {
             throw std::out_of_range("This conversion is only valid for vector with 1 element.");
