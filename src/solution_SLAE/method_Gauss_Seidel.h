@@ -10,7 +10,7 @@ Vector<T> method_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const 
     Vector<T> x_i_next{b.N()};
     std::size_t count{}, n_iter{};
     T d_ii{};
-    while (!cond_stop(A, b, x_i, eps) || n_iter > N_iter) {
+    while (!cond_stop(A, b, x_i, eps) && n_iter < N_iter) {
         for (std::size_t i = 0; i != A.N(); ++i) {
             const std::size_t k_start = A.rows(i);
             const std::size_t k_end = A.rows(i + 1);
