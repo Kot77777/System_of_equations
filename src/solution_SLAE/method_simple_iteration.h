@@ -5,9 +5,10 @@
 #include "algorithms/stop_cond.h"
 
 template<typename T>
-Vector<T> method_simple_iteration(const CSR_matrix<T> &A, const Vector<T> &b, const T t, const std::size_t N_iter,
+Vector<T> method_simple_iteration(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0, const T t,
+                                  const std::size_t N_iter,
                                   const T eps) {
-    Vector<T> x_i{b.N()};
+    Vector<T> x_i{x_0};
     Vector<T> x_i_next{b.N()};
     std::size_t n_iter{};
     while (!cond_stop(A, b, x_i, eps) && n_iter < N_iter) {
