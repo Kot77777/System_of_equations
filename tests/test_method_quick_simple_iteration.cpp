@@ -1,8 +1,29 @@
 #include <gtest/gtest.h>
-#include <solution_SLAE/method_simple_iteration.h>
+#include "solution_SLAE/method_quick_simple_iteration.h"
 #include "algorithms/lamda_max.h"
+#include "algorithms/get_polynom_roots.h"
+#include "algorithms/permutation.h"
 
-TEST(method_simple_iteration, method_simple_iteration_1) {
+TEST(method_quick_simple_iteration, lamda_max) {
+    std::map<std::array<std::size_t, 2>, double> DOK;
+
+    DOK[{0, 0}] = 1.0;
+    DOK[{0, 1}] = 2.0;
+    DOK[{1, 0}] = 4.0;
+    DOK[{1, 1}] = 5.0;
+    DOK[{1, 2}] = 6.0;
+    DOK[{2, 2}] = 9.0;
+
+
+    const CSR_matrix<double> matrix_1{DOK, 3, 3};
+    const Vector<double> r_0{{1., 1., 1.}, 3};
+    const double eps = 10e-15;
+    const double lamd_max = lamda_max(matrix_1, r_0, eps);
+
+    ASSERT_NEAR(lamd_max, 9, 10e-14);
+}
+
+TEST(method_quick_simple_iteration, method_quick_simple_iteration_1) {
     std::map<std::array<std::size_t, 2>, double> DOK;
 
     DOK[{0, 0}] = 28.0;
@@ -16,10 +37,13 @@ TEST(method_simple_iteration, method_simple_iteration_1) {
     const Vector<double> b{{1., 2., 4., 8.}, 4};
     const Vector<double> x_0{4};
     const double eps = 10e-15;
+    const std::size_t n = 64;
     const double lamd_min = 2.;
     const double lamd_max = lamda_max(matrix_1, b, eps);
+    const Vector<double> t{get_polynom_roots<double>(n, (lamd_max - lamd_min) / 2, (lamd_max + lamd_min) / 2)};
+    const Vector<std::size_t> perm = permutation(Vector<size_t>{{0, 1}, 2}, n);
 
-    const Vector<double> res = method_simple_iteration(matrix_1, b, x_0, 2. / (lamd_max + lamd_min),1000, eps);
+    const Vector<double> res = method_quick_simple_iteration(matrix_1, b, x_0, t, perm, n, 1000, eps);
     const Vector<double> exp{{-7. / 128, 27. / 128, 2. / 3, 4.}, 4};
 
     for (std::size_t i = 0; i < 3; ++i) {
@@ -27,7 +51,7 @@ TEST(method_simple_iteration, method_simple_iteration_1) {
     }
 }
 
-TEST(method_simple_iteration, method_simple_iteration_2) {
+TEST(method_quick_simple_iteration, method_quick_simple_iteration_2) {
     std::map<std::array<std::size_t, 2>, double> DOK;
 
     DOK[{0, 0}] = 10.0;
@@ -62,6 +86,12 @@ TEST(method_simple_iteration, method_simple_iteration_2) {
     const Vector<double> b{{1., 1., 1., 1., 1., 1., 1., 1., 1., 1.}, 10};
     const Vector<double> x_0{10};
     const double eps = 10e-15;
+    const std::size_t n = 128;
+    const double lamd_min = 6.438447187191168;
+    const double lamd_max = lamda_max(matrix_1, b, eps);
+    const Vector<double> t{get_polynom_roots<double>(n, (lamd_max - lamd_min) / 2, (lamd_max + lamd_min) / 2)};
+    const Vector<std::size_t> perm = permutation(Vector<size_t>{{0, 1}, 2}, n);
 
-    const Vector<double> res = method_simple_iteration(matrix_1, b, x_0, 2. / 23, 1000, eps);
+    const Vector<double> res = method_quick_simple_iteration(matrix_1, b, x_0, t, perm, n, 1000, eps);
+
 }
