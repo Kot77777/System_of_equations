@@ -3,8 +3,9 @@
 |----------|----------|
 | ![graph](https://github.com/user-attachments/assets/66df29ae-c679-462f-8489-65519edeb6c0) | ![graph_log](https://github.com/user-attachments/assets/bf78f32c-b642-42e9-8be6-6c47459acb55)
 
-## График зависимости невязки от номера итерации при решении СЛАУ для матрицы 10 на 10
-![iterate_method](https://github.com/user-attachments/assets/fbf5b5c9-74da-44f1-825a-b946cd2dde0d)
+## График зависимости невязки от номера итерации при решении СЛАУ для матрицы 4 на 4
+![image](https://github.com/user-attachments/assets/3191d68f-f51f-4531-ae78-3f58155119d4)
+
 
 
 
