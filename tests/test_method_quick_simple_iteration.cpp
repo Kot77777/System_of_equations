@@ -39,7 +39,7 @@ TEST(method_quick_simple_iteration, method_quick_simple_iteration_1) {
     const double eps = 10e-15;
     const std::size_t n = 64;
     const double lamd_min = 2.;
-    const double lamd_max = lamda_max(matrix_1, b, eps);
+    const double lamd_max = lamda_max(matrix_1, b, 1000);
     const Vector<double> t{get_polynom_roots<double>(n, (lamd_max - lamd_min) / 2, (lamd_max + lamd_min) / 2)};
     const Vector<std::size_t> perm = permutation(Vector<size_t>{{0, 1}, 2}, n);
 
@@ -87,8 +87,8 @@ TEST(method_quick_simple_iteration, method_quick_simple_iteration_2) {
     const Vector<double> x_0{10};
     const double eps = 10e-15;
     const std::size_t n = 128;
-    const double lamd_min = 6.438447187191168;
-    const double lamd_max = lamda_max(matrix_1, b, eps);
+    const double lamd_min = 6.43844718719117;
+    const double lamd_max = lamda_max(matrix_1, b, 1000);
     const Vector<double> t{get_polynom_roots<double>(n, (lamd_max - lamd_min) / 2, (lamd_max + lamd_min) / 2)};
     const Vector<std::size_t> perm = permutation(Vector<size_t>{{0, 1}, 2}, n);
 

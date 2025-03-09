@@ -54,7 +54,7 @@ int main() {
     res.clean();
     count = 1;
     const double lamd_min = 8.77427527658846;
-    const double lamd_max = lamda_max(A, b, eps);
+    const double lamd_max = lamda_max(A, b, 1000);
     const double t = 2. / (lamd_max + lamd_min);
 
     while (!cond_stop(A, b, res, eps)) {
@@ -66,7 +66,7 @@ int main() {
     std::ofstream data_measure_quick_simple_iteration("data_measure_quick_simple_iteration.csv");
     data_measure_quick_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
     res.clean();
-    const std::size_t n = 64;
+    const std::size_t n = 256;
 
     const Vector<double> t_{get_polynom_roots<double>(n, (lamd_max - lamd_min) / 2, (lamd_max + lamd_min) / 2)};
     const Vector<std::size_t> perm = permutation(Vector<size_t>{{0, 1}, 2}, n);

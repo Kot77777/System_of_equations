@@ -17,7 +17,7 @@ TEST(method_simple_iteration, method_simple_iteration_1) {
     const Vector<double> x_0{4};
     const double eps = 10e-15;
     const double lamd_min = 2.;
-    const double lamd_max = lamda_max(matrix_1, b, eps);
+    const double lamd_max = lamda_max(matrix_1, b, 1000);
 
     const Vector<double> res = method_simple_iteration(matrix_1, b, x_0, 2. / (lamd_max + lamd_min),1000, eps);
     const Vector<double> exp{{-7. / 128, 27. / 128, 2. / 3, 4.}, 4};
