@@ -4,7 +4,6 @@
 #include <solution_SLAE/method_Gauss_Seidel.h>
 #include <solution_SLAE/method_Jacobi.h>
 #include <solution_SLAE/method_simple_iteration.h>
-#include <solution_SLAE/method_quick_simple_iteration.h>
 #include "algorithms/lamda_max.h"
 #include "algorithms/get_polynom_roots.h"
 #include "algorithms/permutation.h"
@@ -12,24 +11,31 @@
 int main() {
     std::map<std::array<std::size_t, 2>, double> DOK;
 
-    DOK[{0, 0}] = 28.0;
-    DOK[{1, 1}] = 10.0;
-    DOK[{2, 2}] = 26.0;
-    DOK[{0, 1}] = 12.0;
+    DOK[{0, 0}] = 6.0;
+    DOK[{1, 1}] = 5.0;
+    DOK[{2, 2}] = 4.0;
+    DOK[{3, 3}] = 3.0;
+    DOK[{4, 4}] = 4.0;
+    DOK[{0, 1}] = 2.0;
     DOK[{1, 0}] = 2.0;
-    DOK[{2, 0}] = 10.0;
-    DOK[{0, 2}] = 2.0;
-    DOK[{3, 3}] = 10.0;
-    DOK[{3, 0}] = 2.0;
-    DOK[{2, 3}] = 8.0;
+    DOK[{0, 2}] = 1.0;
+    DOK[{2, 0}] = 1.0;
+    DOK[{1, 2}] = 1.0;
+    DOK[{2, 1}] = 1.0;
+    DOK[{1, 3}] = 1.0;
+    DOK[{3, 1}] = 1.0;
+    DOK[{2, 4}] = 1.0;
+    DOK[{4, 2}] = 1.0;
+    DOK[{3, 4}] = 2.0;
+    DOK[{4, 3}] = 2.0;
 
-    const CSR_matrix<double> A{DOK, 4, 4};
-    const Vector<double> b{{1., 2., 4., 8.}, 4};
+    const CSR_matrix<double> A{DOK, 5, 5};
+    const Vector<double> b{{1., 2., 4., 8., 10.}, 5};
     const double eps = 10e-15;
 
     std::ofstream data_measure_Jacobi("data_measure_Jacobi.csv");
     data_measure_Jacobi << "n_iterate" << "," << "nevyzka" << '\n';
-    Vector<double> res{4};
+    Vector<double> res{5};
     std::size_t count = 1;
 
     while (!cond_stop(A, b, res, eps)) {
@@ -53,7 +59,7 @@ int main() {
     data_measure_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
     res.clean();
     count = 1;
-    const double lamd_min = 8.77427527658846;
+    const double lamd_min = 1.02311881410475;
     const double lamd_max = lamda_max(A, b, 1000);
     const double t = 2. / (lamd_max + lamd_min);
 
