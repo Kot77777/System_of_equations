@@ -7,26 +7,24 @@
 template<typename T>
 Vector<T> method_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0, const std::size_t N_iter, const T eps) {
     Vector<T> x_i{x_0};
-    Vector<T> x_i_next{b.N()};
     std::size_t count{}, n_iter{};
-    T d_ii{};
+    T d_ii{}, sum_1{}, sum_2{};
     while (!cond_stop(A, b, x_i, eps) && n_iter < N_iter) {
         for (std::size_t i = 0; i != A.N(); ++i) {
+            sum_1 = 0;
+            sum_2 = 0;
             const std::size_t k_start = A.rows(i);
             const std::size_t k_end = A.rows(i + 1);
             for (std::size_t k = k_start; A.cols(k) < i; ++k) {
-                x_i_next(i) += A.values(k) * x_i_next(A.cols(k));
+                sum_1 += A.values(k) * x_i(A.cols(k));
                 count += 1;
             }
-            d_ii = A.values(k_start + count);
             for (std::size_t k = k_start + count + 1; k < k_end; ++k) {
-                x_i_next(i) += A.values(k) * x_i(A.cols(k));
+                sum_2 += A.values(k) * x_i(A.cols(k));
             }
-            x_i_next(i) = (b(i) - x_i_next(i)) / d_ii;
+            x_i(i) = (b(i) - sum_1 - sum_2) / A(i, i);
             count = 0;
         }
-        x_i = x_i_next;
-        x_i_next.clean();
         n_iter += 1;
     }
     return x_i;
