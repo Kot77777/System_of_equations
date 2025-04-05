@@ -1,11 +1,12 @@
-#ifndef SOLUTION_SLAE_METHOD_GAUSS_SEIDEL_H
-#define SOLUTION_SLAE_METHOD_GAUSS_SEIDEL_H
+#ifndef SOLUTION_SLAE_METHOD_SOR_H
+#define SOLUTION_SLAE_METHOD_SOR_H
 #include "primitives/CSR_matrix.h"
 #include "primitives/vector_from_vector.h"
 #include "algorithms/stop_cond.h"
 
 template<typename T>
-Vector<T> method_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0, const std::size_t N_iter, const T eps) {
+Vector<T> method_SOR(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0,
+                              const std::size_t N_iter, const T eps, const T w) {
     Vector<T> x_i{x_0};
     std::size_t count{}, n_iter{};
     T sum_1{}, sum_2{};
@@ -22,7 +23,7 @@ Vector<T> method_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const 
             for (std::size_t k = k_start + count + 1; k < k_end; ++k) {
                 sum_2 += A.values(k) * x_i(A.cols(k));
             }
-            x_i(i) = (b(i) - sum_1 - sum_2) / A(i, i);
+            x_i(i) = (1 - w) * x_i(i) + w * (b(i) - sum_1 - sum_2) / A(i, i);
             count = 0;
         }
         n_iter += 1;
@@ -30,4 +31,4 @@ Vector<T> method_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const 
     return x_i;
 }
 
-#endif //SOLUTION_SLAE_METHOD_GAUSS_SEIDEL_H
+#endif //SOLUTION_SLAE_METHOD_SOR_H

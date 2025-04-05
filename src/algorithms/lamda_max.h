@@ -1,8 +1,8 @@
 #ifndef ALGORITHMS_LAMDA_MAX_H
 #define ALGORITHMS_LAMDA_MAX_H
 
-template<typename T>
-T lamda_max(const CSR_matrix<T> &A, const Vector<T> &r_0, const std::size_t N_iter) {
+template<typename T, typename T_matrix>
+T lamda_max(const T_matrix &A, const Vector<T> &r_0, const std::size_t N_iter) {
     T mu_i = dot(r_0, A * r_0) / dot(r_0, r_0);
     std::size_t n_iter{};
     Vector<T> r_i_next{r_0};
