@@ -5,7 +5,8 @@
 #include "algorithms/stop_cond.h"
 
 template<typename T>
-Vector<T> method_symmetriz_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0, const std::size_t N_iter, const T eps) {
+Vector<T> method_symmetriz_Gauss_Seidel(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0,
+                                        const std::size_t N_iter, const T eps) {
     Vector<T> x_i{x_0};
     std::size_t count{}, n_iter{};
     T sum_1{}, sum_2{};

@@ -4,7 +4,12 @@
 #include <solution_SLAE/method_Gauss_Seidel.h>
 #include <solution_SLAE/method_Jacobi.h>
 #include <solution_SLAE/method_simple_iteration.h>
+#include <solution_SLAE/method_SOR.h>
+#include <solution_SLAE/method_symmetriz_Gauss_Seidel.h>
+#include <solution_SLAE/method_steepest_gradient_descent.h>
+
 #include "algorithms/lamda_max.h"
+#include "algorithms/lamda_max_for_SOR.h"
 #include "algorithms/get_polynom_roots.h"
 #include "algorithms/permutation.h"
 
@@ -84,7 +89,58 @@ int main() {
             x_i = x_i - t_(perm(i)) * (A * x_i - b);
             n_iter += 1;
             data_measure_quick_simple_iteration << n_iter << "," << (A * x_i - b).norm() << '\n';
-            if(cond_stop(A, b, x_i, eps)){n_iter+=1000; break;}
+            if (cond_stop(A, b, x_i, eps)) {
+                n_iter += 1000;
+                break;
+            }
         }
+    }
+
+    std::ofstream data_measure_SOR("data_measure_SOR.csv");
+    data_measure_SOR << "n_iterate" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+    const double w = 1.5;
+
+    while (!cond_stop(A, b, res, eps)) {
+        res = method_SOR(A, b, res, 1, eps, w);
+        data_measure_SOR << count << "," << (A * res - b).norm() << '\n';
+        count += 1;
+    }
+
+    std::ofstream data_measure_SOR_fastest("data_measure_SOR_fastest.csv");
+    data_measure_SOR_fastest << "n_iterate" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+    const double mu = lamda_max_for_SOR(A, b, 1000);
+    const double mu_p = mu / (1.0 + sqrt(1.0 - mu * mu));
+    const double w_fastest = 1 + mu_p * mu_p;
+
+    while (!cond_stop(A, b, res, eps)) {
+        res = method_SOR(A, b, res, 1, eps, w_fastest);
+        data_measure_SOR_fastest << count << "," << (A * res - b).norm() << '\n';
+        count += 1;
+    }
+
+    std::ofstream data_measure_symmetriz_Gauss_Seidel("data_measure_symmetriz_Gauss_Seidel.csv");
+    data_measure_symmetriz_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+
+    while (!cond_stop(A, b, res, eps)) {
+        res = method_symmetriz_Gauss_Seidel(A, b, res, 1, eps);
+        data_measure_symmetriz_Gauss_Seidel << count << "," << (A * res - b).norm() << '\n';
+        count += 1;
+    }
+
+    std::ofstream data_measure_steepest_gradient_descent("data_measure_steepest_gradient_descent.csv");
+    data_measure_steepest_gradient_descent << "n_iterate" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+
+    while (!cond_stop(A, b, res, eps)) {
+        res = method_steepest_gradient_descent(A, b, res, 1, eps);
+        data_measure_steepest_gradient_descent << count << "," << (A * res - b).norm() << '\n';
+        count += 1;
     }
 }
