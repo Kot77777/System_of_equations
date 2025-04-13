@@ -52,3 +52,20 @@ TEST(method_Gauss_Seidel, method_Gauss_Seidel_2) {
         ASSERT_NEAR(res(i), exp(i), eps);
     }
 }
+
+TEST(method_Gauss_Seidel, method_Gauss_Seidel_3) {
+    std::map<std::array<std::size_t, 2>, double> DOK;
+
+    DOK[{0, 0}] = 28.0;
+    DOK[{1, 1}] = 10.0;
+    DOK[{2, 2}] = 6.0;
+    DOK[{0, 1}] = 2.0;
+    DOK[{1, 0}] = 2.0;
+
+    const CSR_matrix<double> A{DOK, 3, 3};
+    const Vector<double> b{{1., 2., 4.}, 3};
+    const Vector<double> x_0{3};
+    const double eps = 1e-15;
+
+    const Vector<double> res = method_symmetriz_Gauss_Seidel(A, b, x_0, 1000, eps);
+}

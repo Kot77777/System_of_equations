@@ -24,7 +24,7 @@ TEST(method_Gauss_Seidel, method_Gauss_Seidel_1) {
 
     const CSR_matrix<double> A{DOK, 5, 5};
     const Vector<double> b{{1., 2., 4., 8., 10.}, 5};
-    const double eps = 10e-15;
+    const double eps = 1e-15;
     const Vector<double> x_0{5};
 
     const Vector<double> res = method_Gauss_Seidel(A, b, x_0, 1000, eps);
