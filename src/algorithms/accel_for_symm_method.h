@@ -2,7 +2,6 @@
 #define ALGORITHMS_ACCEL_FOR_SYMM_METHOD_H
 #include <utility>
 #include "primitives/CSR_matrix.h"
-#include <iostream>
 
 template<typename T, typename Method>
 Vector<T> accel(const CSR_matrix<T> &A, const Vector<T> &x_0, const Vector<T> &b, const T rho, const Method &method,
