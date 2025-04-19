@@ -16,7 +16,6 @@ Vector<T> accel(const CSR_matrix<T> &A, const Vector<T> &x_0, const Vector<T> &b
         y_0 = std::exchange(y_1, w * (method(b, y_1) - y_0) + y_0);
         w = 1 / (1 - rho * rho * w / 4);
         n_iter += 1;
-        std::cout << y_1(0) << '\n';
     }
 
     return y_1;

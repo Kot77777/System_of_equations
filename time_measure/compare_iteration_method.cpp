@@ -125,12 +125,12 @@ int main() {
     std::ofstream data_measure_symmetriz_Gauss_Seidel("data_measure_symmetriz_Gauss_Seidel.csv");
     data_measure_symmetriz_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
     res.clean();
-    count = 1;
+    count = 2;
 
     while (!cond_stop(A, b, res, eps)) {
         res = method_symmetriz_Gauss_Seidel(A, b, res, 1, eps);
         data_measure_symmetriz_Gauss_Seidel << count << "," << (A * res - b).norm() << '\n';
-        count += 1;
+        count += 2;
     }
 
     std::ofstream data_measure_steepest_gradient_descent("data_measure_steepest_gradient_descent.csv");

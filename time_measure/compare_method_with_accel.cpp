@@ -33,57 +33,107 @@ int main() {
     const double eps = 1e-14;
     const Vector<double> x_0{5};
 
-    std::ofstream data_measure_Jacobi("data_measure_Jacobi_1.csv");
-    std::ofstream time_measure_Jacobi("time_measure_Jacobi_1.csv");
-    data_measure_Jacobi << "n_iterate" << "," << "nevyzka" << '\n';
-    time_measure_Jacobi << "time" << "," << "nevyzka" << '\n';
-
     Vector<double> res{5};
     std::size_t count = 1;
     double r = 0;
-    std::chrono::microseconds accumulated_duration(0);
+    std::chrono::nanoseconds accumulated_duration(0);
+
+    std::ofstream data_measure_Jacobi_accel("data_measure_Jacobi_accel.csv");
+    std::ofstream time_measure_Jacobi_accel("time_measure_Jacobi_accel.csv");
+    data_measure_Jacobi_accel << "n_iterate" << "," << "nevyzka" << '\n';
+    time_measure_Jacobi_accel << "time" << "," << "nevyzka" << '\n';
+
+    const auto Jacobi = [&A, eps](const Vector<double> &b, const Vector<double> &x_0) {
+        return method_Jacobi(A, b, x_0, 1, eps);
+    };
+
+    const double rho_Jacobi = lamda_max_for_accel(Jacobi, b, 1000);
+
+    while (!cond_stop(A, b, res, eps)) {
+        auto start = std::chrono::high_resolution_clock::now();
+        res = accel(A, res, b, rho_Jacobi, Jacobi, 1, eps);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        accumulated_duration += duration;
+        r = (A * res - b).norm();
+
+        data_measure_Jacobi_accel << count << "," << r << '\n';
+        time_measure_Jacobi_accel <<  accumulated_duration.count() << "," << r << '\n';
+        count += 1;
+    }
+
+    std::ofstream time_measure_Jacobi("time_measure_Jacobi.csv");
+    time_measure_Jacobi << "time" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+    std::chrono::nanoseconds accumulated_duration_1(0);
 
     while (!cond_stop(A, b, res, eps)) {
         auto start = std::chrono::high_resolution_clock::now();
         res = method_Jacobi(A, b, res, 1, eps);
         auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        accumulated_duration += duration;
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        accumulated_duration_1 += duration;
         r = (A * res - b).norm();
 
-        data_measure_Jacobi << count << "," << r << '\n';
-        time_measure_Jacobi <<  accumulated_duration.count() << "," << r << '\n';
+        time_measure_Jacobi <<  accumulated_duration_1.count() << "," << r << '\n';
         count += 1;
     }
 
-    std::ofstream data_measure_Gauss_Seidel("data_measure_Gauss_Seidel_1.csv");
-    std::ofstream time_measure_Gauss_Seidel("time_measure_Gauss_Seidel_1.csv");
-    data_measure_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
+
+    std::ofstream data_measure_Gauss_Seidel_accel("data_measure_Gauss_Seidel_accel.csv");
+    std::ofstream time_measure_Gauss_Seidel_accel("time_measure_Gauss_Seidel_accel.csv");
+    data_measure_Gauss_Seidel_accel << "n_iterate" << "," << "nevyzka" << '\n';
+    time_measure_Gauss_Seidel_accel << "time" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+    std::chrono::nanoseconds accumulated_duration1(0);
+
+    const auto Gauss_Seidel = [&A, eps](const Vector<double> &b, const Vector<double> &x_0) {
+        return method_Gauss_Seidel(A, b, x_0, 1, eps);
+    };
+
+    const double rho_Gauss_Seidel = lamda_max_for_accel(Gauss_Seidel, b, 1000);
+
+    while (!cond_stop(A, b, res, eps)) {
+        auto start = std::chrono::high_resolution_clock::now();
+        res = accel(A, res, b, rho_Gauss_Seidel, Gauss_Seidel, 1, eps);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        accumulated_duration1 += duration;
+        r = (A * res - b).norm();
+
+        data_measure_Gauss_Seidel_accel << count << "," << r << '\n';
+        time_measure_Gauss_Seidel_accel <<  accumulated_duration1.count() << "," << r << '\n';
+        count += 1;
+    }
+
+    std::ofstream time_measure_Gauss_Seidel("time_measure_Gauss_Seidel.csv");
     time_measure_Gauss_Seidel << "time" << "," << "nevyzka" << '\n';
     res.clean();
     count = 1;
-    std::chrono::microseconds accumulated_duration1(0);
+    std::chrono::nanoseconds accumulated_duration_1_1(0);
 
     while (!cond_stop(A, b, res, eps)) {
         auto start = std::chrono::high_resolution_clock::now();
         res = method_Gauss_Seidel(A, b, res, 1, eps);
         auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        accumulated_duration1 += duration;
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        accumulated_duration_1_1 += duration;
         r = (A * res - b).norm();
 
-        data_measure_Gauss_Seidel << count << "," << r << '\n';
-        time_measure_Gauss_Seidel <<  accumulated_duration1.count() << "," << r << '\n';
+        time_measure_Gauss_Seidel <<  accumulated_duration_1_1.count() << "," << r << '\n';
         count += 1;
     }
+
 
     std::ofstream data_measure_accel_symm_Gauss_Seidel("data_measure_accel_symm_Gauss_Seidel.csv");
     std::ofstream time_measure_accel_symm_Gauss_Seidel("time_measure_accel_symm_Gauss_Seidel.csv");
     data_measure_accel_symm_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
     time_measure_accel_symm_Gauss_Seidel << "time" << "," << "nevyzka" << '\n';
     res.clean();
-    count = 1;
-    std::chrono::microseconds accumulated_duration2(0);
+    count = 2;
+    std::chrono::nanoseconds accumulated_duration2(0);
 
     const auto symm_Gauss_Seidel = [&A, eps](const Vector<double> &b, const Vector<double> &x_0) {
         return method_symmetriz_Gauss_Seidel(A, b, x_0, 1, eps);
@@ -95,12 +145,30 @@ int main() {
         auto start = std::chrono::high_resolution_clock::now();
         res = accel(A, res, b, rho_symm_GS, symm_Gauss_Seidel, 1, eps);
         auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
         accumulated_duration2 += duration;
         r = (A * res - b).norm();
 
         data_measure_accel_symm_Gauss_Seidel << count << "," << r << '\n';
         time_measure_accel_symm_Gauss_Seidel <<  accumulated_duration2.count() << "," << r << '\n';
+        count += 2;
+    }
+
+    std::ofstream time_measure_symm_Gauss_Seidel("time_measure_symm_Gauss_Seidel.csv");
+    time_measure_symm_Gauss_Seidel << "time" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+    std::chrono::nanoseconds accumulated_duration_2_1(0);
+
+    while (!cond_stop(A, b, res, eps)) {
+        auto start = std::chrono::high_resolution_clock::now();
+        res = method_symmetriz_Gauss_Seidel(A, b, res, 1, eps);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        accumulated_duration_2_1 += duration;
+        r = (A * res - b).norm();
+
+        time_measure_symm_Gauss_Seidel <<  accumulated_duration_2_1.count() << "," << r << '\n';
         count += 1;
     }
 }
