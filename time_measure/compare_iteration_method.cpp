@@ -1,6 +1,6 @@
 #include <fstream>
-#include <map>
-#include <array>
+#include <algorithms/generate_matrix_of_elliptic_equation.h>
+#include <solution_SLAE/method_ConjugateGradients.h>
 #include <solution_SLAE/method_Gauss_Seidel.h>
 #include <solution_SLAE/method_Jacobi.h>
 #include <solution_SLAE/method_simple_iteration.h>
@@ -8,39 +8,19 @@
 #include <solution_SLAE/method_symmetriz_Gauss_Seidel.h>
 #include <solution_SLAE/method_steepest_gradient_descent.h>
 
-#include "algorithms/lamda_max.h"
 #include "algorithms/lamda_max_for_SOR.h"
 #include "algorithms/get_polynom_roots.h"
 #include "algorithms/permutation.h"
 
 int main() {
-    std::map<std::array<std::size_t, 2>, double> DOK;
-
-    DOK[{0, 0}] = 6.0;
-    DOK[{1, 1}] = 5.0;
-    DOK[{2, 2}] = 4.0;
-    DOK[{3, 3}] = 3.0;
-    DOK[{4, 4}] = 4.0;
-    DOK[{0, 1}] = 2.0;
-    DOK[{1, 0}] = 2.0;
-    DOK[{0, 2}] = 1.0;
-    DOK[{2, 0}] = 1.0;
-    DOK[{1, 2}] = 1.0;
-    DOK[{2, 1}] = 1.0;
-    DOK[{1, 3}] = 1.0;
-    DOK[{3, 1}] = 1.0;
-    DOK[{2, 4}] = 1.0;
-    DOK[{4, 2}] = 1.0;
-    DOK[{3, 4}] = 2.0;
-    DOK[{4, 3}] = 2.0;
-
-    const CSR_matrix<double> A{DOK, 5, 5};
-    const Vector<double> b{{1., 2., 4., 8., 10.}, 5};
-    const double eps = 10e-15;
+    const std::size_t N = 50;
+    const CSR_matrix<double> A = generate_matrix<double>(N);
+    const Vector<double> b{std::vector<double>(N * N, 1), N * N};
+    const double eps = 1e-11;
 
     std::ofstream data_measure_Jacobi("data_measure_Jacobi.csv");
     data_measure_Jacobi << "n_iterate" << "," << "nevyzka" << '\n';
-    Vector<double> res{5};
+    Vector<double> res{N * N};
     std::size_t count = 1;
 
     while (!cond_stop(A, b, res, eps)) {
@@ -64,8 +44,8 @@ int main() {
     data_measure_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
     res.clean();
     count = 1;
-    const double lamd_min = 1.02311881410475;
-    const double lamd_max = lamda_max(A, b, 1000);
+    const double lamd_min = 8 + 4 * cos(M_PI / (N + 1));
+    const double lamd_max = 8 + 4 * cos(N * M_PI / (N + 1));
     const double t = 2. / (lamd_max + lamd_min);
 
     while (!cond_stop(A, b, res, eps)) {
@@ -84,7 +64,7 @@ int main() {
 
     Vector<double> x_i{res};
     std::size_t n_iter{};
-    while (!cond_stop(A, b, x_i, eps) && n_iter < 1000) {
+    while (!cond_stop(A, b, x_i, eps)) {
         for (std::size_t i = 0; i < n; ++i) {
             x_i = x_i - t_(perm(i)) * (A * x_i - b);
             n_iter += 1;
@@ -142,5 +122,31 @@ int main() {
         res = method_steepest_gradient_descent(A, b, res, 1, eps);
         data_measure_steepest_gradient_descent << count << "," << (A * res - b).norm() << '\n';
         count += 1;
+    }
+
+    std::ofstream data_measure_CG("data_measure_CG.csv");
+    data_measure_CG << "n_iterate" << "," << "nevyzka" << '\n';
+    res.clean();
+    count = 1;
+
+    Vector<double> r_i = A * res - b;
+    Vector<double> r_i_next{r_i};
+    Vector<double> d_i{r_i};
+    x_i.clean();
+    double alpha_i{}, betta_i{};
+    n_iter = 0;
+
+    while (r_i.norm() >= eps && n_iter < 1000) {
+        alpha_i = dot(r_i, r_i) / dot(d_i, A * d_i);
+        x_i = x_i - alpha_i * d_i;
+        r_i_next = A * x_i - b;
+
+        betta_i = dot(r_i_next, r_i_next) / dot(r_i, r_i);
+        d_i = r_i_next + betta_i * d_i;
+        r_i = r_i_next;
+
+        n_iter += 1;
+
+        data_measure_CG << n_iter << "," << r_i.norm() << '\n';
     }
 }

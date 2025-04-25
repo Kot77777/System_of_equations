@@ -1,6 +1,7 @@
 #ifndef PRIMITIVES_VECTOR_FROM_VECTOR_H
 #define PRIMITIVES_VECTOR_FROM_VECTOR_H
 #include <cmath>
+#include <vector>
 
 template<typename T>
 class Vector {
