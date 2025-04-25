@@ -68,4 +68,19 @@ Vector<T> operator*(const CSR_matrix<T> &matrix, const Vector<T> &vector) {
     return vector_res;
 }
 
+template<typename T>
+Vector<T> transpose_multiply(const CSR_matrix<T> &matrix, const Vector<T> &vector) {
+    Vector<T> vector_res{matrix.N()};
+    const std::size_t N = matrix.N();
+
+    for (std::size_t i = 0; i != N; ++i) {
+        const std::size_t k_start = matrix.rows(i);
+        const std::size_t k_end = matrix.rows(i+1);
+        for (std::size_t k = k_start; k < k_end; ++k) {
+            vector_res(matrix.cols(k)) += matrix.values(k) * vector(i);
+        }
+    }
+    return vector_res;
+}
+
 #endif //PRIMITIVES_CSR_MATRIX_H

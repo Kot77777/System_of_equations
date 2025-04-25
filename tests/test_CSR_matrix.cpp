@@ -68,3 +68,24 @@ TEST(CSR_matrix, dot_CSR_matrix_on_vector_2) {
     ASSERT_EQ(res1 == exp, 1);
     ASSERT_EQ(res2 == exp, 1);
 }
+
+TEST(CSR_matrix, dot_transpose_CSR_matrix_on_vector_3) {
+    std::map<std::array<std::size_t, 2>, double> DOK;
+
+    DOK[{0, 0}] = 1.0;
+    DOK[{2, 1}] = 1.0;
+    DOK[{1, 2}] = 4.0;
+    DOK[{0, 3}] = 3.0;
+    DOK[{0, 1}] = 2.0;
+    DOK[{2, 3}] = 11.0;
+    DOK[{3, 2}] = 2.0;
+
+    const CSR_matrix<double> matrix_1{DOK, 4, 4};
+    const Vector<double> vec{{2, 3, 4, 5}, 4};
+
+    const Vector<double> res1 = transpose_multiply(matrix_1, vec);
+
+    const Vector<double> exp{{2, 8, 22, 50}, 4};
+
+    ASSERT_EQ(res1 == exp, 1);
+}

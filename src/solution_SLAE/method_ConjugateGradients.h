@@ -1,12 +1,11 @@
-#ifndef solution_SLAE_METHOD_CONJUGATE_GRADIENT_H
-#define solution_SLAE_METHOD_CONJUGATE_GRADIENT_H
-#include <utility>
-
+#ifndef SOLUTION_SLAE_METHOD_CONJUGATE_GRADIENT_H
+#define SOLUTION_SLAE_METHOD_CONJUGATE_GRADIENT_H
 #include "primitives/vector_from_vector.h"
 #include "primitives/CSR_matrix.h"
 
 template<typename T>
-Vector<T> method_ConjugateGradients(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0, const std::size_t N_iter, const T eps) {
+Vector<T> method_ConjugateGradients(const CSR_matrix<T> &A, const Vector<T> &b, const Vector<T> &x_0,
+                                    const std::size_t N_iter, const T eps) {
     Vector<T> r_i = A * x_0 - b;
     Vector<T> r_i_next{r_i};
     Vector<T> d_i{r_i};
@@ -18,6 +17,7 @@ Vector<T> method_ConjugateGradients(const CSR_matrix<T> &A, const Vector<T> &b, 
         alpha_i = dot(r_i, r_i) / dot(d_i, A * d_i);
         x_i = x_i - alpha_i * d_i;
         r_i_next = A * x_i - b;
+
         betta_i = dot(r_i_next, r_i_next) / dot(r_i, r_i);
         d_i = r_i_next + betta_i * d_i;
         r_i = r_i_next;
@@ -28,4 +28,4 @@ Vector<T> method_ConjugateGradients(const CSR_matrix<T> &A, const Vector<T> &b, 
     return x_i;
 }
 
-#endif //solution_SLAE_METHOD_CONJUGATE_GRADIENT_H
+#endif //SOLUTION_SLAE_METHOD_CONJUGATE_GRADIENT_H
