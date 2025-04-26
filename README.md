@@ -17,3 +17,6 @@
 
 ## График зависимости невязки от номера итерации при решении СЛАУ для матрицы 2500 на 2500
 ![iterate_method_new](https://github.com/user-attachments/assets/fa7e5dc7-9166-4f55-be91-e2bb1adfeb91)
+
+## Сравнение скорости сходимости BiCG и CGS
+![BiCG_vs_CGS](https://github.com/user-attachments/assets/8991a783-ee9b-413b-8e6e-cf48abfcf14c)
