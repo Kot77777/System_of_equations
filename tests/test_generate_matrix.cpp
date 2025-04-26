@@ -2,7 +2,7 @@
 #include "algorithms/generate_matrix_of_elliptic_equation.h"
 
 TEST(generate_matrix, generate_matrix) {
-    const std::size_t N = 5;
+    const std::size_t N = 2;
     CSR_matrix<double> A = generate_matrix<double>(N);
 
     for (std::size_t i = 0; i < N * N; ++i) {

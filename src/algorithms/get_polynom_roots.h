@@ -6,10 +6,10 @@ Vector<T> get_polynom_roots(const std::size_t n, const T k, const T b) {
     Vector<T> t{n};
     Vector<T> res{n};
     const T cos_pi_2n = cos(M_PI / 2 / n);
-    const T sin_pi_2n = sqrt(1 - cos_pi_2n * cos_pi_2n);
-    const T cos_pi_n = 2 * cos_pi_2n * cos_pi_2n - 1;
-    const T sin_pi_n = sqrt(1 - cos_pi_n * cos_pi_n);
-    t(0) = cos_pi_2n * cos_pi_n - sin_pi_2n * sin_pi_n;
+    //const T sin_pi_2n = sin(M_PI / 2 / n);
+    const T cos_pi_n = cos(M_PI / n);
+    const T sin_pi_n = sin(M_PI / n);
+    t(0) = cos_pi_2n;
     for (std::size_t i = 1; i < n; ++i) {
         t(i) = t(i - 1) * cos_pi_n - sqrt(1 - t(i - 1) * t(i - 1)) * sin_pi_n;
     }

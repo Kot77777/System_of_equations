@@ -44,8 +44,8 @@ int main() {
     data_measure_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
     res.clean();
     count = 1;
-    const double lamd_min = 8 + 4 * cos(M_PI / (N + 1));
-    const double lamd_max = 8 + 4 * cos(N * M_PI / (N + 1));
+    const double lamd_min = 8 * sin(M_PI / (2 * (N + 1))) * sin(M_PI / (2 * (N + 1)));
+    const double lamd_max = 8 * sin(N * M_PI / (2 * (N + 1))) * sin(N * M_PI / (2 * (N + 1)));
     const double t = 2. / (lamd_max + lamd_min);
 
     while (!cond_stop(A, b, res, eps)) {
@@ -70,7 +70,6 @@ int main() {
             n_iter += 1;
             data_measure_quick_simple_iteration << n_iter << "," << (A * x_i - b).norm() << '\n';
             if (cond_stop(A, b, x_i, eps)) {
-                n_iter += 1000;
                 break;
             }
         }
