@@ -11,6 +11,8 @@
 #include "algorithms/lamda_max_for_SOR.h"
 #include "algorithms/get_polynom_roots.h"
 #include "algorithms/permutation.h"
+#include "algorithms/lamda_max_for_accel.h"
+#include "algorithms/accel_for_symm_method.h"
 
 int main() {
     const std::size_t N = 50;
@@ -18,9 +20,12 @@ int main() {
     const Vector<double> b{std::vector<double>(N * N, 1), N * N};
     const double eps = 1e-11;
 
+    Vector<double> res{N * N};
+    double r0 = (A * res - b).norm();
+
     std::ofstream data_measure_Jacobi("data_measure_Jacobi.csv");
     data_measure_Jacobi << "n_iterate" << "," << "nevyzka" << '\n';
-    Vector<double> res{N * N};
+    data_measure_Jacobi << 0 << "," << r0 << '\n';
     std::size_t count = 1;
 
     while (!cond_stop(A, b, res, eps)) {
@@ -31,6 +36,7 @@ int main() {
 
     std::ofstream data_measure_Gauss_Seidel("data_measure_Gauss_Seidel.csv");
     data_measure_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_Gauss_Seidel << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
 
@@ -40,8 +46,28 @@ int main() {
         count += 1;
     }
 
+    std::ofstream data_measure_accel_symm_Gauss_Seidel("data_measure_accel_symm_Gauss_Seidel.csv");
+    data_measure_accel_symm_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_accel_symm_Gauss_Seidel << 0 << "," << r0 << '\n';
+    res.clean();
+    count = 2;
+
+    const auto symm_Gauss_Seidel = [&A, eps](const Vector<double> &b, const Vector<double> &x_0) {
+        return method_symmetriz_Gauss_Seidel(A, b, x_0, 1, eps);
+    };
+
+    const double rho_symm_GS = lamda_max_for_accel(symm_Gauss_Seidel, b, 1000);
+
+    while (!cond_stop(A, b, res, eps)) {
+        res = accel(A, res, b, rho_symm_GS, symm_Gauss_Seidel, 1, eps);
+
+        data_measure_accel_symm_Gauss_Seidel << count << "," << (A * res - b).norm() << '\n';
+        count += 1;
+    }
+
     std::ofstream data_measure_simple_iteration("data_measure_simple_iteration.csv");
     data_measure_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_simple_iteration << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
     const double lamd_min = 8 * sin(M_PI / (2 * (N + 1))) * sin(M_PI / (2 * (N + 1)));
@@ -56,6 +82,7 @@ int main() {
 
     std::ofstream data_measure_quick_simple_iteration("data_measure_quick_simple_iteration.csv");
     data_measure_quick_simple_iteration << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_quick_simple_iteration << 0 << "," << r0 << '\n';
     res.clean();
     const std::size_t n = 256;
 
@@ -77,6 +104,7 @@ int main() {
 
     std::ofstream data_measure_SOR("data_measure_SOR.csv");
     data_measure_SOR << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_SOR << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
     const double w = 1.5;
@@ -89,6 +117,7 @@ int main() {
 
     std::ofstream data_measure_SOR_fastest("data_measure_SOR_fastest.csv");
     data_measure_SOR_fastest << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_SOR_fastest << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
     const double mu = lamda_max_for_SOR(A, b, 1000);
@@ -103,6 +132,7 @@ int main() {
 
     std::ofstream data_measure_symmetriz_Gauss_Seidel("data_measure_symmetriz_Gauss_Seidel.csv");
     data_measure_symmetriz_Gauss_Seidel << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_symmetriz_Gauss_Seidel << 0 << "," << r0 << '\n';
     res.clean();
     count = 2;
 
@@ -114,6 +144,7 @@ int main() {
 
     std::ofstream data_measure_steepest_gradient_descent("data_measure_steepest_gradient_descent.csv");
     data_measure_steepest_gradient_descent << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_steepest_gradient_descent << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
 
@@ -125,6 +156,7 @@ int main() {
 
     std::ofstream data_measure_CG("data_measure_CG.csv");
     data_measure_CG << "n_iterate" << "," << "nevyzka" << '\n';
+    data_measure_CG << 0 << "," << r0 << '\n';
     res.clean();
     count = 1;
 
