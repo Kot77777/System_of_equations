@@ -4,13 +4,14 @@
 #include "primitives/Upper_Triangular_Matrix.h"
 #include "primitives/Col_Major_Matrix.h"
 
-template<typename T, std::size_t N>
+template<typename T>
 struct Arnoldi {
     using Rotation = std::pair<T, T>;
-    Upper_Triangular_Matrix<T> R{N};
-    Vector<Rotation> rotations{N};
-    Col_Major_Matrix<T> basis{N};
 
+    std::size_t N_;
+    Upper_Triangular_Matrix<T> R_;
+    Vector<Rotation> rotations_;
+    Col_Major_Matrix<T> basis_;
 };
 
 #endif //PRIMITIVES_ARNOLDI_H

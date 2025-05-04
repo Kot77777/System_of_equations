@@ -18,13 +18,30 @@ public:
         N_ = N;
     }
 
+    void resize(const std::size_t i) {
+        data_.insert(data_.end(), i, 0);
+        N_ = i;
+    }
+
     T &operator()(const std::size_t i, const std::size_t j) {
-        return data_[i * N_ + j - i * (i+1) / 2];
+        return data_[j * N_ + i - j * (j+1) / 2];
     }
 
     T operator()(const std::size_t i, const std::size_t j) const {
-        return data_[i * N_ + j - i * (i+1) / 2];
+        return data_[j * N_ + i - j * (j+1) / 2];
     }
 };
+
+template<typename T>
+Vector<T> solution_SLAE(const Upper_Triangular_Matrix<T> &R, const Vector<T> &z) {
+    Vector<T> res{z.N()};
+    for (int i = z.N() - 1; i >= 0; --i) {
+        for (int j = z.N() - 1; j > i; --j) {
+            res(i) -= res(j) * R(i, j);
+        }
+        res(i) = (res(i) + z(i)) / R(i, i);
+    }
+    return res;
+}
 
 #endif //UPPER_TRIANGULAR_MATRIX_H

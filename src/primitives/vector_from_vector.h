@@ -2,6 +2,7 @@
 #define PRIMITIVES_VECTOR_FROM_VECTOR_H
 #include <cmath>
 #include <vector>
+#include <span>
 
 template<typename T>
 class Vector {
@@ -14,9 +15,16 @@ public:
     Vector(const std::vector<T> &vector, const std::size_t N) : data_(vector), N_(N) {
     }
 
+    Vector(const std::span<const T> &sp) : N_(sp.size()), data_(sp.begin(), sp.end()) {}
+
     Vector(const std::size_t N) {
         data_.resize(N);
         N_ = N;
+    }
+
+    void push_back(const T &i) {
+        data_.push_back(i);
+        N_ += 1;
     }
 
     T &operator()(const std::size_t i) {
@@ -42,6 +50,8 @@ public:
         }
         return std::sqrt(res);
     }
+
+    const std::vector<T>& data_get() const { return data_; }
 
     void clean() {
         data_.clear();
