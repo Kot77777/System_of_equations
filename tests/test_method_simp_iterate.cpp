@@ -28,6 +28,30 @@ TEST(method_simple_iteration, method_simple_iteration_1) {
     }
 }
 
+TEST(method_simple_iteration, method_simple_iteration_2) {
+    std::map<std::array<std::size_t, 2>, double> DOK{
+
+            {{0, 0}, 10.0},
+            {{0, 1}, 3.0},
+            {{0, 2}, 6.0},
+            {{1, 0}, 3.0},
+            {{1, 1}, 5.0},
+            {{1, 2}, 1.0},
+            {{2, 0}, 6.0},
+            {{2, 1}, 1.0},
+            {{2, 2}, 8.0}
+    };
+
+
+    const CSR_matrix<double> A{DOK, 3, 3};
+    const Vector<double> b{{2., 2., 2.}, 3};
+    const double eps = 1e-13;
+    const Vector<double> x_0{3};
+    const double lamd_min = 2.251;
+    const double lamd_max = lamda_max(A, b, 1000);
+
+    const Vector<double> res = method_simple_iteration(A, b, x_0, 2. / (lamd_max + lamd_min),1000, eps);
+}
 // TEST(method_simple_iteration, method_simple_iteration_2) {
 //     std::map<std::array<std::size_t, 2>, double> DOK;
 //

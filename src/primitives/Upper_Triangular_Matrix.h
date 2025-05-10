@@ -23,23 +23,28 @@ public:
         N_ = i;
     }
 
-    T &operator()(const std::size_t i, const std::size_t j) {
-        return data_[j * N_ + i - j * (j+1) / 2];
+    T operator()(const std::size_t i, const std::size_t j) const {
+        if (j >= i) {
+            return data_[i + j * (j + 1) / 2];
+        }
+        return 0;
     }
 
-    T operator()(const std::size_t i, const std::size_t j) const {
-        return data_[j * N_ + i - j * (j+1) / 2];
+    T &operator()(const std::size_t i, const std::size_t j) {
+        return data_[i + j * (j + 1) / 2];
     }
 };
 
 template<typename T>
 Vector<T> solution_SLAE(const Upper_Triangular_Matrix<T> &R, const Vector<T> &z) {
     Vector<T> res{z.N()};
+    T sum{};
     for (int i = z.N() - 1; i >= 0; --i) {
         for (int j = z.N() - 1; j > i; --j) {
-            res(i) -= res(j) * R(i, j);
+            sum += res(j) * R(i, j);
         }
-        res(i) = (res(i) + z(i)) / R(i, i);
+        res(i) = (z(i) - sum) / R(i, i);
+        sum = 0;
     }
     return res;
 }

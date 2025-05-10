@@ -15,7 +15,8 @@ public:
     Vector(const std::vector<T> &vector, const std::size_t N) : data_(vector), N_(N) {
     }
 
-    Vector(const std::span<const T> &sp) : N_(sp.size()), data_(sp.begin(), sp.end()) {}
+    Vector(const std::span<const T> &sp) : N_(sp.size()), data_(sp.begin(), sp.end()) {
+    }
 
     Vector(const std::size_t N) {
         data_.resize(N);
@@ -51,7 +52,7 @@ public:
         return std::sqrt(res);
     }
 
-    const std::vector<T>& data_get() const { return data_; }
+    const std::vector<T> &data_get() const { return data_; }
 
     void clean() {
         data_.clear();

@@ -6,20 +6,24 @@
 template<typename T>
 class Col_Major_Matrix {
     std::size_t N_{};
+    std::size_t M_{};
     std::vector<T> data_{};
 
 public:
     Col_Major_Matrix() = default;
 
-    Col_Major_Matrix(const std::vector<T> &data, const std::size_t N) : data_(data), N_(N) {
+    Col_Major_Matrix(const std::vector<T> &data, const std::size_t N, const std::size_t M) : data_(data), N_(N), M_(M) {
     }
 
     void set_N(const std::size_t N) {
         N_ = N;
     }
 
-    void insert(const std::size_t i) {
-        data_.insert(data_.end(), i, 0);
+    const std::size_t N() const { return N_; }
+
+    void resize() {
+        M_ += 1;
+        data_.resize(N_ * M_, 0);
     }
 
     void col(const Vector<T> &v, const std::size_t i) {
@@ -44,10 +48,10 @@ public:
 
 template<typename T>
 Vector<T> operator*(const Col_Major_Matrix<T> &matrix, const Vector<T> &vector) {
-    Vector<T> vector_res{vector.N()};
-    for (std::size_t i = 0; i != vector.N(); ++i) {
+    Vector<T> vector_res{matrix.N()};
+    for (std::size_t i = 0; i != matrix.N(); ++i) {
         for (std::size_t k = 0; k != vector.N(); ++k) {
-            vector_res(i) += matrix(k, i) * vector(k);
+            vector_res(i) += matrix(i, k) * vector(k);
         }
     }
     return vector_res;

@@ -29,3 +29,26 @@ TEST(method_steepest_gradient_descent, method_steepest_gradient_descent) {
 
     const Vector<double> res = method_steepest_gradient_descent(A, b, x_0, 1000, eps);
 }
+
+TEST(method_steepest_gradient_descent, method_steepest_gradient_descent2) {
+    std::map<std::array<std::size_t, 2>, double> DOK{
+
+        {{0, 0}, 10.0},
+        {{0, 1}, 3.0},
+        {{0, 2}, 6.0},
+        {{1, 0}, 3.0},
+        {{1, 1}, 5.0},
+        {{1, 2}, 1.0},
+        {{2, 0}, 6.0},
+        {{2, 1}, 1.0},
+        {{2, 2}, 8.0}
+    };
+
+
+    const CSR_matrix<double> A{DOK, 3, 3};
+    const Vector<double> b{{2., 2., 2.}, 3};
+    const double eps = 1e-15;
+    const Vector<double> x_0{3};
+
+    const Vector<double> res = method_steepest_gradient_descent(A, b, x_0, 1000, eps);
+}
