@@ -1,3 +1,3 @@
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(SLAE_project INTERFACE)
 
-target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(SLAE_project INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
