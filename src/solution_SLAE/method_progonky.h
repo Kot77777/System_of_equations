@@ -15,6 +15,10 @@ std::vector<T> method_progonky(const std::vector<T>& a,
                                  const std::vector<T>& d) {
 
     const std::size_t N = b.size();
+    if (N == 1) {
+        return {d[0] / b[0]};
+    }
+
     std::vector<PQ<T>> pq_arr(N-1);
     pq_arr[0] = PQ<T> {-c[0] / b[0], d[0] / b[0]};
 

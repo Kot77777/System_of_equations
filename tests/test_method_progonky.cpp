@@ -45,3 +45,12 @@ TEST(method_progonky, equal_of_array_5) {
         ASSERT_NEAR(result[i], expected[i], 1e-7);
     }
 }
+
+TEST(method_progonky, equal_of_array_6) {
+    std::vector<float> expected = {3.};
+    std::vector<float> result = method_progonky<float>({}, {2}, {}, {6});
+
+    for (size_t i = 0; i != 1; ++i) {
+        ASSERT_NEAR(result[i], expected[i], 1e-7);
+    }
+}
