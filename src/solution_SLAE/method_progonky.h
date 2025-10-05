@@ -1,6 +1,6 @@
 #ifndef SOLUTION_SLAE_METHOD_PROGONKY_H
 #define SOLUTION_SLAE_METHOD_PROGONKY_H
-#include <array>
+#include <vector>
 
 template<typename T>
 struct PQ{
@@ -8,13 +8,14 @@ struct PQ{
     T q_ = 0;
 };
 
-template<typename T, std::size_t N>
-std::array<T, N> method_progonky(const std::array<T, N - 1>& a,
-                                 const std::array<T, N>& b,
-                                 const std::array<T, N - 1>& c,
-                                 const std::array<T, N>& d) {
+template<typename T>
+std::vector<T> method_progonky(const std::vector<T>& a,
+                                 const std::vector<T>& b,
+                                 const std::vector<T>& c,
+                                 const std::vector<T>& d) {
 
-    std::array<PQ<T>, N-1> pq_arr;
+    const std::size_t N = b.size();
+    std::vector<PQ<T>> pq_arr(N-1);
     pq_arr[0] = PQ<T> {-c[0] / b[0], d[0] / b[0]};
 
     for (std::size_t i = 1; i != N - 1; ++i) {
@@ -23,7 +24,7 @@ std::array<T, N> method_progonky(const std::array<T, N - 1>& a,
         pq_arr[i] = PQ<T> {p_i, q_i};
     }
 
-    std::array<T, N> solution;
+    std::vector<T> solution(N);
     solution[N-1] = (d[N-1] - a[N-2] * pq_arr[N-2].q_) / (a[N-2] * pq_arr[N-2].p_ + b[N-1]);
 
     for (std::size_t i = N - 1; i != 0; --i) {
